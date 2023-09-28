@@ -1,5 +1,6 @@
 from django.db import models
 from menu.models import *
+from django.contrib.auth.models import User
 
 class Conversacion(models.Model):
     # Modelo para representar una conversación iniciada por un usuario
