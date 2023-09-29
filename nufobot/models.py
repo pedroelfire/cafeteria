@@ -12,6 +12,7 @@ class Conversacion(models.Model):
 class Mensaje(models.Model):
     # Modelo para representar un mensaje en una conversación
     id = models.AutoField(primary_key=True)
+    ai_role = models.BooleanField(default=True)
     conversation = models.ForeignKey(Conversacion, on_delete=models.CASCADE)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)

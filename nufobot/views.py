@@ -10,14 +10,14 @@ from menu.models import *
 
 # Create your views here.
 
-openai_key= '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'
+openai_key= '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'
 openai.api_key = openai_key
 
 class ConversacionView(APIView):
     serializer_class = ConversacionSerializer
 
     def get(self, request):
-        detail = [{"Id de usuario": detail.user.id, "Fecha de creacion": detail.created_at } 
+        detail = [{"Id": detail.id, "Id de usuario": detail.user.id, "Fecha de creacion": detail.created_at } 
         for detail in Conversacion.objects.all()]
         return Response(detail)
     
@@ -31,7 +31,7 @@ class MensajeView(APIView):
     serializer_class = MensajeSerializer
 
     def get(self, request):
-        detail = [{"conversacion id": detail.conversation.id, "Usuario id": detail.conversation.user.id, "Mensaje id": detail.id, "Contenido": detail.content, "Fecha": detail.created_at } 
+        detail = [{"conversacion id": detail.conversation.id, "Usuario id": detail.conversation.user.id, "Mensaje id": detail.id, "Contenido": detail.content, "Fecha": detail.created_at, "ai": detail.ai_role } 
         for detail in Mensaje.objects.all()]
         return Response(detail)
     
@@ -40,14 +40,15 @@ class MensajeView(APIView):
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             if "content" in serializer.validated_data:
-                mensaje = serializer.validated_data.get("content")
-                respuesta_openai = ask_openai(mensaje)
-                nuevo_mensaje = Mensaje(
-                    conversation=serializer.validated_data.get("conversation"),
-                    content=respuesta_openai,  
-                    created_at=timezone.now()  
-                )
-                nuevo_mensaje.save()
+                if serializer.validated_data.get("ai_role") == False:
+                    mensaje = serializer.validated_data.get("content")
+                    respuesta_openai = ask_openai(mensaje)
+                    nuevo_mensaje = Mensaje(
+                        conversation=serializer.validated_data.get("conversation"),
+                        content=respuesta_openai,  
+                        created_at=timezone.now()  
+                    )
+                    nuevo_mensaje.save()
 
             return redirect("http://127.0.0.1:8000/nufobot/mensaje/")
         
