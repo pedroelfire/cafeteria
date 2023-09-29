@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "menu",
     "nufobot",
     "rest_framework",
+    "nutrition",
     "DailyExcersiceRegister",
     'corsheaders',
 ]

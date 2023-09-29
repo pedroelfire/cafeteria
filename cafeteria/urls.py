@@ -23,5 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("routineregister/", include("menu.urls") ),
     path("dailyregister/", include("DailyExcersiceRegister.urls")),
-    path("nufobot/", include("nufobot.urls") )
+    path("nufobot/", include("nufobot.urls") ),
+    path("nutricion/", include("nutrition.urls"))
 ]
