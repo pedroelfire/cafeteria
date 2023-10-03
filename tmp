@@ -1,0 +1,10 @@
+Postgres cluster nufogy-api-db created
+  Username:    postgres
+  Password:    IdNGE9EiNW2Zmz7
+  Hostname:    nufogy-api-db.internal
+  Flycast:     fdaa:3:2239:0:1::7
+  Proxy port:  5432
+  Postgres port:  5433
+  Connection string: postgres://postgres:IdNGE9EiNW2Zmz7@nufogy-api-db.flycast:5432
+
+DATABASE_URL=postgres://nufogy_api:F04lBjYOSC8OdQl@nufogy-api-db.flycast:5432/nufogy_api?sslmode=disable

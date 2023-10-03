@@ -6,11 +6,11 @@ from .serializer import *
 from django.utils import timezone
 from django.http import JsonResponse
 import openai
-from menu.models import *
+from register.models import *
 
 # Create your views here.
 
-openai_key= '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'
+openai_key= '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'
 openai.api_key = openai_key
 
 class ConversacionView(APIView):
@@ -50,23 +50,36 @@ class MensajeView(APIView):
                     )
                     nuevo_mensaje.save()
 
-            return redirect("http://127.0.0.1:8000/nufobot/mensaje/")
-        
+            return MensajeView.get(self,request)
+    
 
 def ask_openai(message):
-    detalles_info = DetalleEjercicio.objects.filter(plan_semanal__usuario_id=1)
-    informacion_previa = "\n".join([
-    f"Usuario: {detalle.plan_semanal.usuario.nombre}, Ejercicio: {detalle.ejercicio.nombre}, Repeticiones: {detalle.repeticiones}, Series: {detalle.series}, Peso: {detalle.peso}, Tipo de Equipo: {detalle.tipo_equipo}"
-    for detalle in detalles_info
-])
+    # Obtener todos los ejercicios creados en la tabla Ejercicio
+    ejercicios = Ejercicio.objects.all()
+    
+    # Inicializa una lista vacía para almacenar la información de los ejercicios
+    ejercicios_info = []
+    
+    # Comprobar si se encontraron ejercicios
+    if ejercicios:
+        # Recorrer los ejercicios y agregar su información a la lista ejercicios_info
+        for ejercicio in ejercicios:
+            ejercicios_info.append(f"{ejercicio.nombre}: {ejercicio.descripcion}")
+        
+        # Construir la información previa
+        informacion_previa = f"Ejercicios disponibles: {', '.join(ejercicios_info)}"
+        print(informacion_previa)
+    else:
+        informacion_previa = "No se encontraron ejercicios en la tabla Ejercicio"
+    
     response = openai.ChatCompletion.create(
-        model = "gpt-4",
-    messages=[
-        {"role": "system", "content": "You are an helpful assistant."},
-        {"role": "system", "content": informacion_previa},  # Agrega la información previa aquí
-        {"role": "user", "content": message},
-    ]
-)
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "Eres un asistente, desempeñas el trabajo de nutricionista y entrenador, tu trabajo es responder preguntas sobre esos temas."},
+            {"role": "system", "content": f"Esta es la informacion previa, tomala en cuenta para tus respuestas: {informacion_previa}"},  # Agrega la información previa aquí
+            {"role": "user", "content": message},
+        ]
+    )
     
     answer = response.choices[0].message.content.strip()
     return answer

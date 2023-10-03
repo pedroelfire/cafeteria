@@ -21,8 +21,9 @@ from nufobot.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("routineregister/", include("menu.urls") ),
-    path("dailyregister/", include("DailyExcersiceRegister.urls")),
+    path("user/", include("menu.urls") ),
+    path("registrar/", include("register.urls")),
     path("nufobot/", include("nufobot.urls") ),
-    path("nutricion/", include("nutrition.urls"))
+    path("nutricion/", include("nutrition.urls")),
+    path("feed/", include("feed.urls"))
 ]
